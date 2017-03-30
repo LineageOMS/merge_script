@@ -37,10 +37,10 @@
 ###############
 
 # THIS VARIABLE MUST BE SET BEFORE CONTINUING
-SOURCE_DIR=
+SOURCE_DIR="$1"
 
 if [[ -z ${SOURCE_DIR} ]]; then
-    echo "Please open the script and set the SOURCE_DIR variable on line 36!"
+    echo "Usage: ./lineage_oms_merge.sh {SOURCE_DIR}"
     exit
 fi
 
