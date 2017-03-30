@@ -24,43 +24,8 @@
 
 # PURPOSE: Merge Substratum support from LineageOMS org into LineageOS repos
 #
-# USAGE: $ bash lineage_oms_merge.sh <source_directory>
-#
-# IMPORTANT: IF YOU HAVE FORKED LINEAGE REPOS, YOU ONLY NEED TO RUN THIS ONCE
-#            OTHERWISE, RUN THIS ONCE PER REPO SYNC
+# USAGE: $ bash lineage_oms_merge.sh -h
 
-
-###############
-#             #
-#  VARIABLES  #
-#             #
-###############
-
-# THIS VARIABLE MUST BE SET BEFORE CONTINUING
-SOURCE_DIR="${1}"
-
-if [[ -z ${SOURCE_DIR} ]]; then
-    echo "Usage: bash lineage_oms_merge.sh <source_directory>"
-    exit
-fi
-
-# DO NOT EDIT THIS
-SUBS_REPOS="
-.repo/manifests
-frameworks/base
-frameworks/native
-packages/apps/Contacts
-packages/apps/ContactsCommon
-packages/apps/Dialer
-packages/apps/ExactCalculator
-packages/apps/PackageInstaller
-packages/apps/PhoneCommon
-packages/apps/Settings
-system/core
-system/sepolicy
-vendor/cm"
-
-unset RESULT_STRING
 
 ############
 #          #
@@ -68,6 +33,7 @@ unset RESULT_STRING
 #          #
 ############
 
+BOLD="\033[1m"
 GREEN="\033[01;32m"
 RED="\033[01;31m"
 RESTORE="\033[0m"
@@ -126,6 +92,60 @@ function format_time() {
 
     echo ${TIME_STRING}
 }
+
+# PRINTS A HELP MENU
+function help_menu() {
+    echo -e "\n${BOLD}OVERVIEW:${RESTORE} Merges full Substratum support from LineageOMS organization into a LineageOS set of repos\n"
+    echo -e "${BOLD}USAGE:${RESTORE} bash lineage_oms_merge.sh <source_dir>\n"
+    echo -e "${BOLD}EXAMPLE:${RESTORE} bash lineage_oms_merge.sh ~/Android/Lineage\n"
+    echo -e "Required options:"
+    echo -e "       source_dir: Location of the Lineage tree; this needs to exist for the script to properly proceed\n"
+}
+
+
+###############
+#             #
+#  VARIABLES  #
+#             #
+###############
+
+if [[ $# -eq 0 ]]; then
+    help_menu && exit
+fi
+
+while [[ $# -ge 1 ]]; do
+    case "${1}" in
+        "-h"|"--help")
+            help_menu && exit ;;
+        *)
+            SOURCE_DIR=${1}
+            if [[ ! -d ${SOURCE_DIR} ]]; then
+                echo -e ${RED}"\nSource directory not found!\n"${RESTORE} && exit
+            elif [[ ! -d ${SOURCE_DIR}/.repo ]]; then
+                echo -e ${RED}"\nThis is not a valid Android source folder as there is no .repo folder!\n"${RESTORE} && exit
+            fi ;;
+    esac
+
+    shift
+done
+
+# DO NOT EDIT THIS
+SUBS_REPOS="
+.repo/manifests
+frameworks/base
+frameworks/native
+packages/apps/Contacts
+packages/apps/ContactsCommon
+packages/apps/Dialer
+packages/apps/ExactCalculator
+packages/apps/PackageInstaller
+packages/apps/PhoneCommon
+packages/apps/Settings
+system/core
+system/sepolicy
+vendor/cm"
+
+unset RESULT_STRING
 
 
 ################
