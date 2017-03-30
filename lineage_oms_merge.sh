@@ -24,7 +24,7 @@
 
 # PURPOSE: Merge Substratum support from LineageOMS org into LineageOS repos
 #
-# USAGE: $ bash lineage_oms_merge.sh
+# USAGE: $ bash lineage_oms_merge.sh <source_directory>
 #
 # IMPORTANT: IF YOU HAVE FORKED LINEAGE REPOS, YOU ONLY NEED TO RUN THIS ONCE
 #            OTHERWISE, RUN THIS ONCE PER REPO SYNC
@@ -37,10 +37,10 @@
 ###############
 
 # THIS VARIABLE MUST BE SET BEFORE CONTINUING
-SOURCE_DIR=
+SOURCE_DIR="${1}"
 
 if [[ -z ${SOURCE_DIR} ]]; then
-    echo "Please open the script and set the SOURCE_DIR variable on line 36!"
+    echo "Usage: bash lineage_oms_merge.sh <source_directory>"
     exit
 fi
 
