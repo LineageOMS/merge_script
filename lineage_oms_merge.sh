@@ -208,7 +208,7 @@ for FOLDER in ${SUBS_REPOS}; do
     # NOW THAT WE HAVE THE HASHES, WE WANT TO TRY AND SEE IF OMS ALREADY EXISTS
     # THIS SCRIPT NEEDS TO BE RUN ON A CLEAN REPO
     SECOND_COMMIT_MESSAGE=$( git log --format=%s ${SECOND_HASH}^..${SECOND_HASH} | sed "s/\[\([^]]*\)\]/\\\[\1\\\]/g" )
-    if [[ $( git log --grep="${SECOND_COMMIT_MESSAGE}" | wc -l ) && ${URL} != "android" ]]; then
+    if [[ $( git log --format=%h --grep="${SECOND_COMMIT_MESSAGE}" --all-match | wc -l ) > 0 && ${URL} != "android" ]]; then
         reportError "PREVIOUS COMMITS FOUND; SCRIPT MUST BE RUN ON A CLEAN REPO! EITHER REPO SYNC OR PICK COMMITS MANUALLY!" && exit
     fi
 
