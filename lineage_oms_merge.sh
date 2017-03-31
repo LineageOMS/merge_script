@@ -54,11 +54,6 @@ function echoText() {
     echo -e ${RESTORE}
 }
 
-# CREATES A NEW LINE IN TERMINAL
-function newLine() {
-    echo -e ""
-}
-
 # FORMATS THE TIME
 function format_time() {
     MINS=$(((${1}-${2})/60))
@@ -98,10 +93,38 @@ function help_menu() {
     echo -e "\n${BOLD}OVERVIEW:${RESTORE} Merges full Substratum support from LineageOMS organization into a LineageOS set of repos\n"
     echo -e "${BOLD}USAGE:${RESTORE} bash lineage_oms_merge.sh <source_dir>\n"
     echo -e "${BOLD}EXAMPLE:${RESTORE} bash lineage_oms_merge.sh ~/Android/Lineage\n"
-    echo -e "Required options:"
+    echo -e "${BOLD}Required options:${RESTORE}"
     echo -e "       source_dir: Location of the Lineage tree; this needs to exist for the script to properly proceed\n"
 }
 
+# CREATES A NEW LINE IN TERMINAL
+function newLine() {
+    echo -e ""
+}
+
+# PRINTS AN ERROR IN BOLD RED
+function reportError() {
+    RED="\033[01;31m"
+    RESTORE="\033[0m"
+
+    echo -e ""
+    echo -e ${RED}"${1}"${RESTORE}
+    if [[ -z ${2} ]]; then
+        echo -e ""
+    fi
+}
+
+# PRINTS AN WARNING IN BOLD YELLOW
+function reportWarning() {
+    YELLOW="\033[01;33m"
+    RESTORE="\033[0m"
+
+    echo -e ""
+    echo -e ${YELLOW}"${1}"${RESTORE}
+    if [[ -z ${2} ]]; then
+        echo -e ""
+    fi
+}
 
 ###############
 #             #
@@ -110,7 +133,7 @@ function help_menu() {
 ###############
 
 if [[ $# -eq 0 ]]; then
-    help_menu && exit
+    reportError "Source directory not specified!" -c; help_menu && exit
 fi
 
 while [[ $# -ge 1 ]]; do
@@ -120,9 +143,9 @@ while [[ $# -ge 1 ]]; do
         *)
             SOURCE_DIR=${1}
             if [[ ! -d ${SOURCE_DIR} ]]; then
-                echo -e ${RED}"\nSource directory not found!\n"${RESTORE} && exit
+                reportError "Source directory not found!" && exit
             elif [[ ! -d ${SOURCE_DIR}/.repo ]]; then
-                echo -e ${RED}"\nThis is not a valid Android source folder as there is no .repo folder!\n"${RESTORE} && exit
+                reportError "This is not a valid Android source folder as there is no .repo folder!" && exit
             fi ;;
     esac
 
