@@ -205,7 +205,14 @@ for FOLDER in ${SUBS_REPOS}; do
     NUMBER_OF_COMMITS=$(( $( git log --format=%H --committer="Nathan Chancellor" FETCH_HEAD | wc -l ) - 1 ))
     SECOND_HASH=$( git log --format=%H --committer="Nathan Chancellor" FETCH_HEAD~${NUMBER_OF_COMMITS}^..FETCH_HEAD~${NUMBER_OF_COMMITS} )
 
-    # PICK THE COMMITS
+    # NOW THAT WE HAVE THE HASHES, WE WANT TO TRY AND SEE IF OMS ALREADY EXISTS
+    # THIS SCRIPT NEEDS TO BE RUN ON A CLEAN REPO
+    SECOND_COMMIT_MESSAGE=$( git log --format=%s ${SECOND_HASH}^..${SECOND_HASH} | sed "s/\[\([^]]*\)\]/\\\[\1\\\]/g" )
+    if [[ $( git log --grep="${SECOND_COMMIT_MESSAGE}" | wc -l ) ]]; then
+        reportError "PREVIOUS COMMITS FOUND; SCRIPT MUST BE RUN ON A CLEAN REPO! EITHER REPO SYNC OR PICK COMMITS MANUALLY!" && exit
+    fi
+
+    # PICK THE COMMITS IF EVERYTHING CHECKS OUT
     git cherry-pick --abort
     git cherry-pick ${SECOND_HASH}^..${FIRST_HASH}
 
