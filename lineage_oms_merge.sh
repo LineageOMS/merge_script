@@ -164,7 +164,6 @@ packages/apps/ExactCalculator
 packages/apps/PackageInstaller
 packages/apps/PhoneCommon
 packages/apps/Settings
-system/core
 system/sepolicy
 vendor/cm"
 
@@ -212,8 +211,9 @@ for FOLDER in ${SUBS_REPOS}; do
         reportError "PREVIOUS COMMITS FOUND; SCRIPT MUST BE RUN ON A CLEAN REPO! EITHER REPO SYNC OR PICK COMMITS MANUALLY!" && exit
     fi
 
+    # RESET ANY LOCAL CHANGES SO THAT CHERRY-PICK DOES NOT FAIL
+    git reset --hard HEAD
     # PICK THE COMMITS IF EVERYTHING CHECKS OUT
-    git cherry-pick --abort
     git cherry-pick ${SECOND_HASH}^..${FIRST_HASH}
 
     # ADD TO RESULT STRING
@@ -228,8 +228,8 @@ done
 cd ${SOURCE_DIR}
 
 # SYNC THEME INTERFACER REPO
-newLine; echoText "Syncing packages/apps/ThemeInterfacer"
-repo sync packages/apps/ThemeInterfacer
+newLine; echoText "Syncing packages/services/ThemeInterfacer"
+repo sync --force-sync packages/services/ThemeInterfacer
 
 # PRINT RESULTS
 echoText "RESULTS"
