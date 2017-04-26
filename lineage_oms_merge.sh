@@ -189,12 +189,16 @@ for FOLDER in ${SUBS_REPOS}; do
     # SET PROPER URL
     if [[ ${FOLDER} == ".repo/manifests" ]]; then
         URL=android
+
+        BRANCH=merge_script
     else
         URL=android_$( echo ${FOLDER} | sed "s/\//_/g" )
+
+        BRANCH=cm-14.1
     fi
 
     # FETCH THE REPO
-    git fetch https://github.com/LineageOMS/${URL} cm-14.1
+    git fetch https://github.com/LineageOMS/${URL} ${BRANCH}
 
     # GIT GYMNASTICS (GETS MESSY, BEWARE)
     # FIRST HASH WILL ALWAYS BE THE FETCH HEAD
