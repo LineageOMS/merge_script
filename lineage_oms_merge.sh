@@ -154,7 +154,6 @@ done
 
 # DO NOT EDIT THIS
 SUBS_REPOS="
-.repo/manifests
 frameworks/base
 frameworks/native
 packages/apps/Contacts
@@ -187,15 +186,9 @@ for FOLDER in ${SUBS_REPOS}; do
     cd ${SOURCE_DIR}/${FOLDER}
 
     # SET PROPER URL
-    if [[ ${FOLDER} == ".repo/manifests" ]]; then
-        URL=android
+    URL=android_$( echo ${FOLDER} | sed "s/\//_/g" )
 
-        BRANCH=merge_script
-    else
-        URL=android_$( echo ${FOLDER} | sed "s/\//_/g" )
-
-        BRANCH=cm-14.1
-    fi
+    BRANCH=cm-14.1
 
     # FETCH THE REPO
     git fetch https://github.com/LineageOMS/${URL} ${BRANCH}
@@ -233,6 +226,14 @@ cd ${SOURCE_DIR}
 
 # SYNC THEME INTERFACER REPO
 newLine; echoText "Syncing packages/services/ThemeInterfacer"
+
+# Make sure that the local manifest exists
+if [[ ! -f .repo/local_manifests/substratum.xml ]]; then
+    mkdir -p .repo/local_manifests
+    curl --silent --output .repo/local_manifests/substratum.xml \
+    https://raw.githubusercontent.com/LineageOMS/merge_script/master/substratum.xml
+fi
+
 repo sync --force-sync packages/services/ThemeInterfacer
 
 # PRINT RESULTS
